@@ -1,9 +1,9 @@
 package com.moondy.loginoauth2.auth.config;
 
-import com.moondysmell.apigateway.auth.domain.OAuthAttributes;
-import com.moondysmell.apigateway.auth.domain.SessionUser;
-import com.moondysmell.apigateway.auth.domain.User;
-import com.moondysmell.apigateway.auth.repository.UserRepository;
+import com.moondy.loginoauth2.auth.domain.OAuthAttributes;
+import com.moondy.loginoauth2.auth.domain.SessionUser;
+import com.moondy.loginoauth2.auth.domain.User;
+import com.moondy.loginoauth2.auth.repository.UserRepository;
 import java.util.Collections;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
