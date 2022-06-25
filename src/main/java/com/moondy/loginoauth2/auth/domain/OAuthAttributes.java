@@ -23,12 +23,14 @@ public class OAuthAttributes {
         this.picture = picture;
     }
 
+    // Map을 받아서
     public static OAuthAttributes of(String registrationId,
         String userNameAttributeName,
         Map<String, Object> attributes) {
         return ofGoogle(userNameAttributeName, attributes);
     }
 
+    //OAuthAttributes로 변환
     private static OAuthAttributes ofGoogle(String userNameAttributeName,
         Map<String, Object> attributes) {
         return OAuthAttributes.builder()
@@ -39,7 +41,7 @@ public class OAuthAttributes {
                    .nameAttributeKey(userNameAttributeName)
                    .build();
     }
-
+    //User Entity로 변환
     public User toEntity() {
         return User.builder()
                    .name(name)

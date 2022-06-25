@@ -1,6 +1,7 @@
 package com.moondy.loginoauth2.auth.config;
 
-import com.moondysmell.apigateway.auth.domain.Role;
+import com.moondy.loginoauth2.auth.domain.Role;
+import com.moondy.loginoauth2.auth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;

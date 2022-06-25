@@ -1,6 +1,6 @@
 package com.moondy.loginoauth2.controller;
 
-import com.moondysmell.apigateway.auth.domain.SessionUser;
+import com.moondy.loginoauth2.auth.domain.SessionUser;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,10 +18,11 @@ public class IndexController {
 
         SessionUser user = (SessionUser) httpSession.getAttribute("user");
 
-        if (user != null) {
-            model.addAttribute("userName", user.getName());
+        if(user != null){
+            model.addAttribute("username", user.getName());
         }
 
         return "index";
     }
+
 }

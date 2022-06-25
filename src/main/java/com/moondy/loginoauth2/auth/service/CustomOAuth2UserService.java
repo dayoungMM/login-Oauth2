@@ -1,4 +1,4 @@
-package com.moondy.loginoauth2.auth.config;
+package com.moondy.loginoauth2.auth.service;
 
 import com.moondy.loginoauth2.auth.domain.OAuthAttributes;
 import com.moondy.loginoauth2.auth.domain.SessionUser;
