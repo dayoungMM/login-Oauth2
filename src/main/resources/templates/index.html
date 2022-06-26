@@ -1,28 +1,27 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="ko">
 <head>
-    <title>스프링 부트 웹서비스</title>
+    <title>Web Service</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <h1>Web Service with Spring boot</h1>
+    <h1>Web Service with Spring boot 테스트</h1>
     <div class="col-md-12">
         <!--로그인 기능 영역-->
         <div class="row">
             <div class="col-md-6">
-                {{#userName}}
+                {{#username}}
                     Logged in as : <span id="user">{{username}}</span>
                     <a href="/logout" class="btn btn-info active" role="button">Logout</a>
-                {{/userName}}
-                {{^userName}}
-                    <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
-                {{/userName}}
+                {{/username}}
+                {{^username}}
+                    <a href="/login/oauth2/code/google" class="btn btn-success active" role="button">Google Login</a>
+                {{/username}}
             </div>
         </div>
     </div>
     <br>
-</body>>
+</body>
