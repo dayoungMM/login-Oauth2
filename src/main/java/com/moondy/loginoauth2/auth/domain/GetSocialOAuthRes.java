@@ -1,6 +1,7 @@
 package com.moondy.loginoauth2.auth.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,10 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
 public class GetSocialOAuthRes {
-
-    private String jwtToken;
-    private int user_num;
-    private String accessToken;
-    private String tokenType;
+    String email;
+    String userName;
 }

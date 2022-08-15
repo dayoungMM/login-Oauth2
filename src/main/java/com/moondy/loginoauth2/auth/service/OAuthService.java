@@ -39,7 +39,7 @@ public class OAuthService {
     }
 
     public GetSocialOAuthRes oAuthLogin(SocialLoginType socialLoginType, String code) throws IOException {
-
+        GetSocialOAuthRes result;
         switch (socialLoginType) {
             case GOOGLE: {
                 //구글로 일회성 코드를 보내 액세스 토큰이 담긴 응답객체를 받아옴
@@ -51,13 +51,15 @@ public class OAuthService {
                 ResponseEntity<String> userInfoResponse = googleOauth.requestUserInfo(oAuthToken);
                 //다시 JSON 형식의 응답 객체를 자바 객체로 역직렬화한다.
                 GoogleUser googleUser = googleOauth.getUserInfo(userInfoResponse);
-                log.info("googleUser: " + googleUser);
+                log.info("googleUser: " + googleUser.getEmail());
+                result = new GetSocialOAuthRes(googleUser.email, googleUser.name);
+                break;
             }
             default: {
                 throw new IllegalArgumentException("알 수 없는 소셜 로그인 형식입니다.");
             }
         }
 
-
+        return result;
     }
 }

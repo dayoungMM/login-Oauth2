@@ -107,23 +107,28 @@ public class GoogleOauth implements SocialOauth {
     public ResponseEntity<String> requestUserInfo(GoogleOAuthToken oAuthToken) {
         String GOOGLE_USERINFO_REQUEST_URL="https://www.googleapis.com/oauth2/v1/userinfo";
 
-//        //header에 accessToken을 담는다.
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Authorization","Bearer "+oAuthToken.getAccess_token());
+        //header에 accessToken을 담는다.
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization","Bearer "+oAuthToken.getAccess_token());
+        System.out.println("Authorization: " + "Bearer "+oAuthToken.getAccess_token());
 
-        RestTemplate restTemplate = new RestTemplate();
-        Map<String, String> header = new HashMap<>();
-        header.put("Authorization", "Bearer "+oAuthToken.getAccess_token());
+        //HttpEntity를 하나 생성해 헤더를 담아서 restTemplate으로 구글과 통신하게 된다.
+        HttpEntity request = new HttpEntity(headers);
 
-        header.put("grant_type", "authorization_code");
-        HttpEntity<Map<String, String>> request = new HttpEntity(header);
-        ResponseEntity<String> response=restTemplate.getForEntity(GOOGLE_USERINFO_REQUEST_URL, String.class,request);
+        ResponseEntity<String> response = restTemplate.exchange(
+                GOOGLE_USERINFO_REQUEST_URL,
+                HttpMethod.GET,
+                request,
+                String.class
+        );
+
         System.out.println("response.getBody() = " + response.getBody());
         return response;
     }
 
     public GoogleUser getUserInfo(ResponseEntity<String> userInfoRes) throws JsonProcessingException {
         GoogleUser googleUser = objectMapper.readValue(userInfoRes.getBody(), GoogleUser.class);
+        System.out.println(googleUser.toString());
         return googleUser;
     }
 }
