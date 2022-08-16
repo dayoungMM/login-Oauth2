@@ -14,6 +14,7 @@
         <div class="row">
             <div class="col-md-6">
                 {{#username}}
+                <p> 회원가입 페이지로 이동이 필요합니다. 유저 정보는 다음과 같습니다.</p>
                     <div>
                         Logged in as : <span id="user">{{username}}</span>
                     </div>
@@ -21,11 +22,14 @@
                         User Email: <span id="email">{{email}}</span>
                     </div>
                     <div>
+                        <img id="profile-picture" src={{{picture}}}>
+                    </div>
+                    <div>
                         <a href="/home" class="btn btn-info active" role="button">Logout</a>
                     </div>
                 {{/username}}
                 {{^username}}
-                    <a href="/app/accounts/auth/google" class="btn btn-success active" role="button">Google Login</a>
+                    <a href="/app/accounts/auth/google" class="btn btn-success active" role="button">Google로 간편 회원가입 하기</a>
                 {{/username}}
             </div>
         </div>

@@ -2,13 +2,11 @@ package com.moondy.loginoauth2.auth.domain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
+import com.moondy.loginoauth2.auth.config.SocialLoginType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -57,15 +55,10 @@ public class GoogleOauth implements SocialOauth {
         System.out.println("redirectURL = " + redirectURL);
 
         return redirectURL;
-        /*
-         * https://accounts.google.com/o/oauth2/v2/auth?scope=profile&response_type=code
-         * &client_id="할당받은 id"&redirect_uri="access token 처리")
-         * 로 Redirect URL을 생성하는 로직을 구성
-         * */
     }
 
     public ResponseEntity<String> requestAccessToken(String code) {
-        String GOOGLE_TOKEN_REQUEST_URL = "https://oauth2.googleapis.com/token";
+        String googleTokenRequestUrl = "https://oauth2.googleapis.com/token";
         RestTemplate restTemplate = new RestTemplate();
         Map<String, Object> params = new HashMap<>();
         params.put("code", code);
@@ -74,7 +67,7 @@ public class GoogleOauth implements SocialOauth {
         params.put("redirect_uri", GOOGLE_SNS_CALLBACK_URL);
         params.put("grant_type", "authorization_code");
 
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(GOOGLE_TOKEN_REQUEST_URL,
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(googleTokenRequestUrl,
                 params, String.class);
 
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
@@ -89,23 +82,8 @@ public class GoogleOauth implements SocialOauth {
         return googleOAuthToken;
     }
 
-//    public ResponseEntity<String> requestUserInfo(GoogleOAuthToken oAuthToken) {
-//        String GOOGLE_USERINFO_REQUEST_URL = "https://www.googleapis.com/oauth2/v1/userinfo";
-//
-//        //header에 accessToken을 담는다.
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Authorization", "Bearer " + oAuthToken.getAccess_token());
-////        headers.add("Authorization", "Bearer " + oAuthToken.getAccess_token());
-//
-//        //HttpEntity를 하나 생성해 헤더를 담아서 restTemplate으로 구글과 통신하게 된다.
-//        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity(headers);
-//        ResponseEntity<String> response = restTemplate.exchange(GOOGLE_USERINFO_REQUEST_URL, HttpMethod.GET, request, String.class);
-//        System.out.println("response.getBody() = " + response.getBody());
-//        return response;
-//    }
-
     public ResponseEntity<String> requestUserInfo(GoogleOAuthToken oAuthToken) {
-        String GOOGLE_USERINFO_REQUEST_URL="https://www.googleapis.com/oauth2/v1/userinfo";
+        String googleUserinfoRequestUrl="https://www.googleapis.com/oauth2/v1/userinfo";
 
         //header에 accessToken을 담는다.
         HttpHeaders headers = new HttpHeaders();
@@ -116,7 +94,7 @@ public class GoogleOauth implements SocialOauth {
         HttpEntity request = new HttpEntity(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-                GOOGLE_USERINFO_REQUEST_URL,
+                googleUserinfoRequestUrl,
                 HttpMethod.GET,
                 request,
                 String.class
@@ -130,5 +108,28 @@ public class GoogleOauth implements SocialOauth {
         GoogleUser googleUser = objectMapper.readValue(userInfoRes.getBody(), GoogleUser.class);
         System.out.println(googleUser.toString());
         return googleUser;
+    }
+
+    public UserInfo parseCommonResponse (String respone) throws JsonProcessingException, RuntimeException {
+        CommonResponse commonResponse = objectMapper.readValue(respone, CommonResponse.class);
+        // 실제로는 유저가 이미 있는 경우에는 로그인에 성공한 것으로 판단하여 JWT 토큰을 발행할 예정
+        // 하지만 지금은 임시 테스트니깐 예외처리
+        if (commonResponse.getCode() == -1002) throw  new RuntimeException(commonResponse.getMessage());
+        UserInfo oAuthRes = commonResponse.getAttribute().get("userInfo");
+        return oAuthRes;
+    }
+
+    public String requestUserInfoToBe(SocialLoginType socialLoginType, String code) {
+        String userServerUrl = String.format("http://localhost:9090/auth/oauth/%s?code=%s",socialLoginType.toString(), code);
+
+        HttpEntity request = new HttpEntity(null);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                userServerUrl,
+                HttpMethod.GET,
+                request,
+                String.class
+        );
+        return response.getBody();
     }
 }
