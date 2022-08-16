@@ -1,27 +1,21 @@
 package com.moondy.loginoauth2.controller;
 
-import com.moondy.loginoauth2.auth.domain.SessionUser;
-import javax.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@RequiredArgsConstructor
 @Controller
 public class IndexController {
-
-    private final HttpSession httpSession;
-
-    @GetMapping("/")
-    public String index(Model model) {
-
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
-
-        if(user != null){
-            model.addAttribute("username", user.getName());
+    @GetMapping("/home")
+    public String index(@RequestParam @Nullable String username, @RequestParam @Nullable String email, Model model) {
+        if (username != null) {
+            model.addAttribute("username", "Moon");
         }
-
+        if (email != null) {
+            model.addAttribute("email", "moon@gmail.com");
+        }
         return "index";
     }
 
