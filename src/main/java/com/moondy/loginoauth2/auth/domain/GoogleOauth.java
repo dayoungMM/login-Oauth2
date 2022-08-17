@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moondy.loginoauth2.auth.config.SocialLoginType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 //@AllArgsConstructor
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class GoogleOauth implements SocialOauth {
 
     private final RestTemplate restTemplate;
@@ -52,7 +54,7 @@ public class GoogleOauth implements SocialOauth {
                 .map(x -> x.getKey() + "=" + x.getValue())
                 .collect(Collectors.joining("&"));
         String redirectURL = GOOGLE_SNS_LOGIN_URL + "?" + parameterString;
-        System.out.println("redirectURL = " + redirectURL);
+        log.info("redirectURL = " + redirectURL);
 
         return redirectURL;
     }
@@ -76,39 +78,7 @@ public class GoogleOauth implements SocialOauth {
         return null;
     }
 
-    public GoogleOAuthToken getAccessToken(ResponseEntity<String> response) throws JsonProcessingException {
-        System.out.println("response.getBody() = " + response.getBody());
-        GoogleOAuthToken googleOAuthToken = objectMapper.readValue(response.getBody(), GoogleOAuthToken.class);
-        return googleOAuthToken;
-    }
 
-    public ResponseEntity<String> requestUserInfo(GoogleOAuthToken oAuthToken) {
-        String googleUserinfoRequestUrl="https://www.googleapis.com/oauth2/v1/userinfo";
-
-        //header에 accessToken을 담는다.
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization","Bearer "+oAuthToken.getAccess_token());
-        System.out.println("Authorization: " + "Bearer "+oAuthToken.getAccess_token());
-
-        //HttpEntity를 하나 생성해 헤더를 담아서 restTemplate으로 구글과 통신하게 된다.
-        HttpEntity request = new HttpEntity(headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(
-                googleUserinfoRequestUrl,
-                HttpMethod.GET,
-                request,
-                String.class
-        );
-
-        System.out.println("response.getBody() = " + response.getBody());
-        return response;
-    }
-
-    public GoogleUser getUserInfo(ResponseEntity<String> userInfoRes) throws JsonProcessingException {
-        GoogleUser googleUser = objectMapper.readValue(userInfoRes.getBody(), GoogleUser.class);
-        System.out.println(googleUser.toString());
-        return googleUser;
-    }
 
     public UserInfo parseCommonResponse (String respone) throws JsonProcessingException, RuntimeException {
         CommonResponse commonResponse = objectMapper.readValue(respone, CommonResponse.class);
