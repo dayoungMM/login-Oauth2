@@ -9,14 +9,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class IndexController {
     @GetMapping("/home")
-    public String index(@RequestParam @Nullable String username, @RequestParam @Nullable String email, Model model) {
+    public String index(@RequestParam @Nullable String username, @RequestParam @Nullable String email, @RequestParam @Nullable String picture, Model model) {
         if (username != null) {
-            model.addAttribute("username", "Moon");
+            model.addAttribute("username", username);
         }
         if (email != null) {
-            model.addAttribute("email", "moon@gmail.com");
+            model.addAttribute("email", email);
+        }
+        if (picture != null) {
+            model.addAttribute("picture", picture);
         }
         return "index";
     }
-
 }
