@@ -78,7 +78,11 @@ public class GoogleOauth implements SocialOauth {
         return null;
     }
 
-
+    public GoogleOAuthToken getAccessToken(ResponseEntity<String> response) throws JsonProcessingException {
+        System.out.println("response.getBody() = " + response.getBody());
+        GoogleOAuthToken googleOAuthToken = objectMapper.readValue(response.getBody(), GoogleOAuthToken.class);
+        return googleOAuthToken;
+    }
 
     public UserInfo parseCommonResponse (String respone) throws JsonProcessingException, RuntimeException {
         CommonResponse commonResponse = objectMapper.readValue(respone, CommonResponse.class);
@@ -90,7 +94,7 @@ public class GoogleOauth implements SocialOauth {
     }
 
     public String requestUserInfoToBe(SocialLoginType socialLoginType, String code) {
-        String userServerUrl = String.format("http://localhost:9090/auth/oauth/%s?code=%s",socialLoginType.toString(), code);
+        String userServerUrl = String.format("http://localhost:9999/api/auth/oauth/%s?code=%s",socialLoginType.toString(), code);
 
         HttpEntity request = new HttpEntity(null);
 

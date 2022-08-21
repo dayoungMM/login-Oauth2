@@ -41,10 +41,13 @@ public class OAuthService {
             case GOOGLE: {
                 //구글로 일회성 코드를 보내 액세스 토큰이 담긴 응답객체를 받아옴
                 ResponseEntity<String> accessTokenResponse = googleOauth.requestAccessToken(code);
+                GoogleOAuthToken oAuthToken = googleOauth.getAccessToken(accessTokenResponse);
 
                 //BE 서버로 보내 기존에 존재하는 사용자인지 확인
                 //액세스 토큰을 다시 구글로 보내 구글에 저장된 사용자 정보가 담긴 응답 객체를 받아온다.
-                String response= googleOauth.requestUserInfoToBe(socialLoginType, accessTokenResponse.getBody());
+                log.info("aceessToken: " + oAuthToken.getAccess_token());
+                String response= googleOauth.requestUserInfoToBe(socialLoginType, oAuthToken.getAccess_token());
+                log.info("response: " + response);
                 result = googleOauth.parseCommonResponse(response);
                 break;
             }
