@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GoogleOauth implements SocialOauth {
 
-    private final RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
     //applications.yml 에서 value annotation을 통해서 값을 받아온다.
     @Value("${spring.oauth2.google.url}")
