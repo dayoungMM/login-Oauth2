@@ -3,16 +3,4 @@ server:
 spring:
   profiles:
     include: oauth
-
-#  jpa:
-#    show-sql: true
-#    open-in-view: true
-#    hibernate:
-#      ddl-auto: update
-#      properties:
-#        hibernate.format_sql: true
-#    database-platform: org.hibernate.dialect.PostgreSQLDialect
-
-#  jackson:
-#    serialization:
-#      fail-on-empty-beans: false
+backend-server-ip: localhost

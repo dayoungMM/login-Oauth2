@@ -38,6 +38,9 @@ public class GoogleOauth implements SocialOauth {
     @Value("${spring.oauth2.google.scope}")
     private String GOOGLE_DATA_ACCESS_SCOPE;
 
+    @Value("${backend-server-ip}")
+    private String BACKEND_SERVER_IP;
+
     private final ObjectMapper objectMapper;
 
     @Override
@@ -94,16 +97,11 @@ public class GoogleOauth implements SocialOauth {
     }
 
     public String requestUserInfoToBe(SocialLoginType socialLoginType, String code) {
-        String userServerUrl = String.format("http://localhost:9999/api/auth/oauth/%s?code=%s",socialLoginType.toString(), code);
+        String userServerUrl = String.format("http://%s:9999/api/auth/oauth/%s?code=%s", BACKEND_SERVER_IP, socialLoginType.toString(), code);
 
-        HttpEntity request = new HttpEntity(null);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity(userServerUrl, String.class);
 
-        ResponseEntity<String> response = restTemplate.exchange(
-                userServerUrl,
-                HttpMethod.GET,
-                request,
-                String.class
-        );
         return response.getBody();
     }
 }
